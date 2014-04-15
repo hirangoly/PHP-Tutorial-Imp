@@ -1,0 +1,130 @@
+Prepared statements and stored procedures 
+They can be thought of as a kind of compiled template for the SQL that an application wants to run, that can be customized using variable parameters. Prepared statements offer two major benefits:
+o	The query only needs to be parsed (or prepared) once, but can be executed multiple times with the same or different parameters. When the query is prepared, the database will analyze, compile and optimize its plan for executing the query. For complex queries this process can take up enough time that it will noticeably slow down an application if there is a need to repeat the same query many times with different parameters. By using a prepared statement the application avoids repeating the analyze/compile/optimize cycle. This means that prepared statements use fewer resources and thus run faster.
+o	The parameters to prepared statements don't need to be quoted; the driver automatically handles this. If an application exclusively uses prepared statements, the developer can be sure that no SQL injection will occur (however, if other portions of the query are being built up with unescaped input, SQL injection is still possible).
+Insert Data
+<?php
+$stmt = $dbh->prepare("INSERT INTO REGISTRY (name, value) VALUES (:name, :value)");
+$stmt->bindParam(':name', $name);
+$stmt->bindParam(':value', $value);
+
+// insert one row
+$name = 'one';
+$value = 1;
+$stmt->execute();
+
+// insert another row with different values
+$name = 'two';
+$value = 2;
+$stmt->execute();
+?>
+Fetch data
+<?php
+$stmt = $dbh->prepare("SELECT * FROM REGISTRY where name = ?");
+if ($stmt->execute(array($_GET['name']))) {
+  while ($row = $stmt->fetch()) {
+    print_r($row);
+  }
+}
+?>
+SQL Injection
+SQL Injection is one of the many web attack mechanisms used by hackers to steal data from organizations. 
+It is the type of attack that takes advantage of improper coding of your web applications that allows hacker to inject SQL commands into say a login form to allow them to gain access to the data held within your database.
+In essence, SQL Injection arises because the fields available for user input allow SQL statements to pass through and query the database directly.
+Solution:
+o	Never connect to the database as a superuser or as the database owner. Use always customized users with very limited privileges.
+o	Use prepared statements with bound variables.
+o	If the application waits for numerical input, consider verifying data with ctype_digit(), or silently change its type using settype(), or use its numeric representation by sprintf().
+o	If the database layer doesn't support binding variables then quote each non numeric user supplied value that is passed to the database with the database-specific string escape function (e.g. mysql_real_escape_string(), sqlite_escape_string(), etc.).
+o	Do not print out any database specific information, especially about the schema, by fair means or foul.
+o	You may use stored procedures and previously defined cursors to abstract data access so that users do not directly access tables or views, but this solution has another impacts.
+
+What is wrong with this code:
+classSomeClass
+{
+protected $_someMember;
+
+publicfunction __construct()
+    {
+        $this->_someMember = 1;
+    }
+
+publicstaticfunction getSomethingStatic()
+    {
+return $this->_someMember * 5; // here's the catch
+    }
+}
+A: Static methods don't have access to $this, because static methods can be executed without instantiating a class.
+
+Preventing Cross-Site Request Forgeries (CSRF)
+Cross-site request forgery (CSRF) is a common and serious exploit where a user is tricked into performing an action he didn’t explicitly intend to do. This can happen when, for example, the user is logged in to one of his favorite websites and proceeds to click a seemingly harmless link. In the background, his profile information is silently updated with an attacker’s e-mail address. The attacker can then use the website’s password reset feature to e-mail herself a new password and she’s just successfully stolen the account. 
+Solution: You need to associate it with some sort of unique identifier/tokenin the url which can then be verified. 
+
+HTML Entities
+Reserved characters in HTML must be replaced with character entities.
+This can be done using HTMLEntities function
+<?php
+$str = "A 'quote' is <b>bold</b>";
+
+// Outputs: A 'quote' is &lt;b&gt;bold&lt;/b&gt;
+echo htmlentities($str);
+
+// Outputs: A &#039;quote&#039; is &lt;b&gt;bold&lt;/b&gt;
+echo htmlentities($str, ENT_QUOTES);
+?>
+Preg_Replace
+preg_replace — Perform a regular expression search and replace
+<?php
+$string = 'The quick brown fox jumped over the lazy dog.';
+$patterns = array();
+$patterns[0] = '/quick/';
+$patterns[1] = '/brown/';
+$patterns[2] = '/fox/';
+$replacements = array();
+$replacements[2] = 'bear';
+$replacements[1] = 'black';
+$replacements[0] = 'slow';
+echo preg_replace($patterns, $replacements, $string);
+?>
+The above example will output:
+The bear black slow jumped over the lazy dog.
+== vs ===
+'==' are equals but not neccesarly the same type and '===' means that they are equals and of the same type. For example, this code: <?php if (true == "true") { echo 'first'; } if (true === "true") { echo 'second'; } ?> will output only first, because "true" is string, and true boolean.
+Explain why the following code displays 2.5 instead of 3:
+$a = 012;
+echo $a / 4;
+________________________________________
+Answer: When a number is preceded by a 0 in PHP, the number is treated as an octal number (base-8). Therefore the octal number 012 is equal to the decimal number 10.
+
+Explode vs implode
+'explode' String values to make an Array:
+$string_values = "grass,trees,sky,ocean"; 
+
+$now_an_array = explode( ",", $string_values ); 
+
+print_r ( $now_an_array ); 
+The output, using print_r() function to print the Array, is...
+
+
+Array ( [0] => grass [1] => trees [2] => sky [3] => ocean )
+
+'Implode' an Array to become a string:
+$this_array = array( "dog","cat","fish" ); 
+
+//Let's put this array into a string. 
+// and use a + sign to separate them in the output.. 
+
+$string = implode( " + ",$this_array); 
+
+//Because it is now a string, we can use 'echo'.. 
+echo $string; 
+//The output is.. dog + cat + fish
+Extract
+The extract() function imports variables into the local symbol table from an array.
+This function uses array keys as variable names and values as variable values. 
+<?php
+$a = "Original";
+$my_array = array("a" => "Cat","b" => "Dog", "c" => "Horse");
+extract($my_array);
+echo "\$a = $a; \$b = $b; \$c = $c";
+?>
