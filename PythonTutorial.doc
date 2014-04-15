@@ -1,0 +1,475 @@
+Python Question
+Basic:
+Source code does not declare the types of variables or parameters or methods. This makes the code short and flexible, and you lose the compile-time type checking in the source code. Python tracks the types of all values at runtime and flags code that does not make sense as it runs.
+Like C++ and Java, Python is case sensitive so "a" and "A" are different variables.
+Python does not require a semicolon at the end of each statement. But it’s not the best style
+Comments begin with a '#' and extend to the end of the line.
+
+Pass command line argument:
+#!/usr/bin/python
+
+# import modules used here -- sys is a very standard one
+import sys
+
+# Gather our code in a main() function
+def main():
+    print'Hello there',sys.argv[1]
+    # Command line args are in sys.argv[1], sys.argv[2] ...
+    # sys.argv[0] is the script name itself and can be ignored
+
+# Standard boilerplate to call the main() function to begin
+# the program.
+if __name__ =='__main__':
+    main()
+Running this program from the command line looks like:
+$ python hello.py Guido
+Hello there Guido
+$ ./hello.py Alice    # without needing 'python' first (Unix)
+Hello there Alice
+Function declaration
+# Defines a "repeat" function that takes 2 arguments.
+def repeat(s, exclaim):
+    """Returns the string s repeated 3 times.
+    If exclaim is true, add exclamation marks.
+    """
+
+    result = s + s + s # can also use "s * 3" which is faster (Why?)
+    if exclaim:
+        result = result +'!!!'
+    return result
+
+def main():
+    print repeat('Yay',False)      ## YayYayYay
+    print repeat('Woo Hoo',True)   ## Woo HooWooHooWooHoo!!!
+
+Strings
+String literals can be enclosed by either double or single quotes, although single quotes are more commonly used.
+A double quoted string literal can contain single quotes without any fuss (e.g. "I didn't do it") and likewise single quoted string can contain double quotes
+Python strings are "immutable" which means they cannot be changed after they are created 
+Unlike Java, the '+' does not automatically convert numbers or other types to string form.
+pi=3.14
+  ##text = 'The value of pi is ' + pi      ## NO, does not work
+  text ='The value of pi is '  +str(pi)  ## yes
+
+String methods
+•	s.lower(), s.upper() -- returns the lowercase or uppercase version of the string
+•	s.strip() -- returns a string with whitespace removed from the start and end
+•	s.isalpha()/s.isdigit()/s.isspace()... -- tests if all the string chars are in the various character classes
+•	s.startswith('other'), s.endswith('other') -- tests if the string starts or ends with the given other string
+•	s.find('other') -- searches for the given other string (not a regular expression) within s, and returns the first index where it begins or -1 if not found
+•	s.replace('old', 'new') -- returns a string where all occurrences of 'old' have been replaced by 'new'
+•	s.split('delim') -- returns a list of substrings separated by the given delimiter. The delimiter is not a regular expression, it's just text. 'aaa,bbb,ccc'.split(',') -> ['aaa', 'bbb', 'ccc']. As a convenient special case s.split() (with no arguments) splits on all whitespace chars.
+•	s.join(list) -- opposite of split(), joins the elements in the given list together using the string as the delimiter. e.g. '---'.join(['aaa', 'bbb', 'ccc']) ->aaa---bbb---ccc
+
+String Slices
+The "slice" syntax is a handy way to refer to sub-parts of sequences -- typically strings and lists. The slice s[start:end] is the elements beginning at start and extending up to but not including end. the Suppose we have s = "Hello"
+ 
+•	s[1:4] is 'ell' -- chars starting at index 1 and extending up to but not including index 4
+•	s[1:] is 'ello' -- omitting either index defaults to the start or end of the string
+•	s[:] is 'Hello' -- omitting both always gives us a copy of the whole thing (this is the pythonic way to copy a sequence like a string or list)
+•	s[1:100] is 'ello' -- an index that is too big is truncated down to the string length
+
+•	s[-1] is 'o' -- last char (1st from the end)
+•	s[-4] is 'e' -- 4th from the end
+•	s[:-3] is 'He' -- going up to but not including the last 3 chars.
+•	s[-3:] is 'llo' -- starting with the 3rd char from the end and extending to the end of the string.
+
+It is a neat truism of slices that for any index n, s[:n] + s[n:] == s. 
+
+String %
+Python has a printf()-like facility to put together a string.
+# % operator
+  text ="%d little pigs come out or I'll %s and %s and %s"%(3,'huff','puff','blow down')
+
+Breaks the above statement in two lines – close in parenthesis
+You cannot just split the line after the '%' as you might in other languages, since by default Python treats each line as a separate statement (on the plus side, this is why we don't need to type semi-colons on each line). To fix this, enclose the whole expression in an outer set of parenthesis 
+# add parens to make the long-line work:
+  text =("%d little pigs come out or I'll %s and %s and %s"%
+    (3,'huff','puff','blow down'))
+
+If Statement
+Python does not use { } to enclose blocks of code for if/loops/function etc.. Instead, Python uses the colon (:) and indentation/whitespace to group statements. 
+
+if speed >=80:
+    print'License and registration please'
+    if mood =='terrible'or speed >=100:
+      print'You have the right to remain silent.'
+    elif mood =='bad'or speed >=90:
+      print"I'm going to have to write you a ticket."
+      write_ticket()
+    else:
+      print"Let's try to keep it under 80 ok?"
+
+Python Lists
+  colors=['red','blue','green']
+  print colors[0]    ## red
+  print colors[2]    ## green
+  printlen(colors)  ## 3
+Assignment with an = on lists does not make a copy. Instead, assignment makes the two variables point to the one list in memory.
+  b = colors   ## Does not copy the list
+ 
+The "empty list" is just an empty pair of brackets [ ]. The '+' works to append two lists, so [1, 2] + [3, 4] yields [1, 2, 3, 4] (this is just like + with strings).
+
+FOR and IN
+squares=[1,4,9,16]
+  sum =0
+  fornumin squares:
+    sum +=num
+  print sum  ## 30
+If an element appears in list
+  list=['larry','curly','moe']
+  if'curly'in list:
+    print'yay'
+
+Range:
+
+## print the numbers from 0 through 99
+  foriinrange(100):
+    printi
+
+While loop:
+## Access every 3rd element in a list
+  i=0
+  whilei<len(a):
+    print a[i]
+    i=i+3
+
+List Methods
+•	list.append(elem) -- adds a single element to the end of the list. Common error: does not return the new list, just modifies the original.
+•	list.insert(index, elem) -- inserts the element at the given index, shifting elements to the right.
+•	list.extend(list2) adds the elements in list2 to the end of the list. Using + or += on a list is similar to using extend().
+•	list.index(elem) -- searches for the given element from the start of the list and returns its index. Throws a ValueError if the element does not appear (use "in" to check without a ValueError).
+•	list.remove(elem) -- searches for the first instance of the given element and removes it (throws ValueError if not present)
+•	list.sort() -- sorts the list in place (does not return it). (The sorted() function shown below is preferred.)
+•	list.reverse() -- reverses the list in place (does not return it)
+•	list.pop(index) -- removes and returns the element at the given index. Returns the rightmost element if index is omitted (roughly the opposite of append()).
+
+list =['larry','curly','moe']
+  list.append('shemp')         ## append elem at end
+  list.insert(0,'xxx')        ## insert elem at index 0
+  list.extend(['yyy','zzz'])  ## add list of elems at end
+  print list  ## ['xxx', 'larry', 'curly', 'moe', 'shemp', 'yyy', 'zzz']
+  printlist.index('curly')    ## 2
+
+  list.remove('curly')         ## search and remove that element
+  list.pop(1)                  ## removes and returns 'larry'
+  print list  ## ['xxx', 'moe', 'shemp', 'yyy', 'zzz']
+
+List Slices
+Slices work on lists just as with strings, and can also be used to change sub-parts of the list.
+  list=['a','b','c','d']
+  print list[1:-1]   ## ['b', 'c']
+  list[0:2]='z'    ## replace ['a', 'b'] with ['z']
+  print list         ## ['z', 'c', 'd']
+
+Python Sorting
+
+a =[5,1,4,3]
+  printsorted(a)  ## [1, 3, 4, 5]
+  print a  ## [5, 1, 4, 3]
+
+The sorted() optional argument reverse=True, e.g. sorted(list, reverse=True), makes it sort backwards.
+  strs=['aa','BB','zz','CC']
+  print sorted(strs)  ## ['BB', 'CC', 'aa', 'zz'] (case sensitive)
+  print sorted(strs, reverse=True)   ## ['zz', 'aa', 'CC', 'BB']
+
+Custom sorting with key
+For example with a list of strings, specifying key=len (the built in len() function) sorts the strings by length, from shortest to longest. The sort calls len() for each string to get the list of proxy length values, and the sorts with those proxy values.
+  strs=['ccc','aaaa','d','bb']
+  print sorted(strs, key=len)  ## ['d', 'bb', 'ccc', 'aaaa']
+
+## "key" argument specifying str.lower function to use for sorting
+  printsorted(strs, key=str.lower)  ## ['aa', 'BB', 'CC', 'zz']
+
+You can also pass in your own MyFn as the key function, like this:
+  ## Say we have a list of strings we want to sort by the last letter of the string.
+  strs=['xc','zb','yd','wa']
+
+  ## Write a little function that takes a string, and returns its last letter.
+  ## This will be the key function (takes in 1 value, returns 1 value).
+  defMyFn(s):
+    return s[-1]
+
+  ## Now pass key=MyFn to sorted() to sort by the last letter:
+  print sorted(strs, key=MyFn)  ## ['wa', 'zb', 'xc', 'yd']
+
+sort() method
+As an alternative to sorted(), the sort() method on a list sorts that list into ascending order, e.g. list.sort().
+alist.sort()            ## correct
+  alist=blist.sort()    ## NO incorrect, sort() returns None
+
+Tuples
+A tuple is a fixed size grouping of elements, such as an (x, y) co-ordinate. Tuples are like lists, except they are immutable and do not change size
+A function that needs to return multiple values can just return a tuple of the values.
+To create a tuple, just list the values within parenthesis separated by commas. The "empty" tuple is just an empty pair of parenthesis. Accessing the elements in a tuple is just like a list -- len(), [ ], for, in, etc. all work the same.
+  tuple =(1,2,'hi')
+  printlen(tuple)  ## 3
+  print tuple[2]    ## hi
+  tuple[2]='bye'  ## NO, tuples cannot be changed
+  tuple =(1,2,'bye')  ## this works
+
+To create a size-1 tuple, the lone element must be followed by a comma.
+  tuple=('hi',)   ## size-1 tuple
+
+advanced operation on List
+nums=[1,2,3,4]
+
+  squares =[ n * n for n innums]   ## [1, 4, 9, 16]
+
+strs=['hello','and','goodbye']
+
+  shouting =[s.upper()+'!!!'for s instrs]
+  ## ['HELLO!!!', 'AND!!!', 'GOODBYE!!!']
+
+  ## Select values <= 2
+  nums=[2,8,1,6]
+  small =[ n for n innumsif n <=2]  ## [2, 1]
+
+  ## Select fruits containing 'a', change to upper case
+  fruits =['apple','cherry','bannana','lemon']
+  afruits=[s.upper()for s in fruits if'a'in s ]
+  ## ['APPLE', 'BANNANA']
+
+Dict Hash Table
+Python's efficient key/value hash table structure is called a "dict". The contents of a dict can be written as a series of key:value pairs within braces { }, e.g. dict = {key1:value1, key2:value2, ... }. The "empty dict" is just an empty pair of curly braces {}.
+## Can build up a dict by starting with the the empty dict {}
+  ## and storing key/value pairs into the dict like this:
+  ## dict[key] = value-for-that-key
+  dict={}
+  dict['a']='alpha'
+  dict['g']='gamma'
+  dict['o']='omega'
+
+  printdict  ## {'a': 'alpha', 'o': 'omega', 'g': 'gamma'}
+
+  printdict['a']     ## Simple lookup, returns 'alpha'
+  dict['a']=6       ## Put new key/value into dict
+  'a'indict         ## True
+  ## print dict['z']                  ## Throws KeyError
+  if'z'indict:printdict['z']     ## Avoid KeyError
+  printdict.get('z')  ## None (instead of KeyError)
+
+## By default, iterating over a dict iterates over its keys.
+  ## Note that the keys are in a random order.
+  for key indict:print key
+  ## prints a g o
+  
+  ## Exactly the same as above
+  for key indict.keys():print key
+
+  ## Get the .keys() list:
+  printdict.keys()  ## ['a', 'o', 'g']
+
+  ## Likewise, there's a .values() list of values
+  printdict.values()  ## ['alpha', 'omega', 'gamma']
+
+  ## Common case -- loop over the keys in sorted order,
+  ## accessing each key/value
+  for key in sorted(dict.keys()):
+    print key,dict[key]
+  
+  ## .items() is the dict expressed as (key, value) tuples
+  printdict.items()  ##  [('a', 'alpha'), ('o', 'omega'), ('g', 'gamma')]
+
+  ## This loop syntax accesses the whole dict by looping
+  ## over the .items() tuple list, accessing one (key, value)
+  ## pair on each iteration.
+  for k, v indict.items():print k,'>', v
+  ## a > alpha    o > omega     g > gamma
+
+Del
+var=6
+  delvar  # var no more!
+  
+  list =['a','b','c','d']
+  del list[0]     ## Delete first element
+  del list[-2:]   ## Delete last two elements
+  print list      ## ['b']
+
+  dict={'a':1,'b':2,'c':3}
+  deldict['b']   ## Delete 'b' entry
+  printdict      ## {'a':1, 'c':3}
+
+Files
+  # Echo the contents of a file
+  f =open('foo.txt','rU')
+  for line in f:   ## iterates over the lines of the file
+    print line,    ## trailing , so print does not add an end-of-line char
+                   ## since 'line' already includes the end-of line.
+  f.close()
+
+The standard for-loop works for text files, iterating through the lines of the file (this works only for text files, not binary files). 
+Python Regular Expressions
+Regular expressions are a powerful language for matching text patterns.
+The Python "re" module provides regular expression support.
+In Python a regular expression search is typically written as:
+  match=re.search(pat,str)
+
+The re.search() method takes a regular expression pattern and a string and searches for that pattern within the string. If the search is successful, search() returns a match object or None otherwise. 
+str='an example word:cat!!'
+match=re.search(r'word:\w\w\w',str)
+# If-statement after search() tests if it succeeded
+  if match:                      
+    print'found',match.group()## 'found word:cat'
+  else:
+    print'did not find'
+
+The 'r' at the start of the pattern string designates a python "raw" string which passes through backslashes without change which is very handy for regular expressions 
+match.group() is the matching text (e.g. 'word:cat')
+
+Basic Patterns
+The power of regular expressions is that they can specify patterns, not just fixed characters. Here are the most basic patterns which match single chars:
+•	a, X, 9, < -- ordinary characters just match themselves exactly. The meta-characters which do not match themselves because they have special meanings are: . ^ $ * + ? { [ ] \ | ( ) (details below)
+•	. (a period) -- matches any single character except newline '\n'
+•	\w -- (lowercase w) matches a "word" character: a letter or digit or underbar [a-zA-Z0-9_]. Note that although "word" is the mnemonic for this, it only matches a single word char, not a whole word. \W (upper case W) matches any non-word character.
+•	\b -- boundary between word and non-word
+•	\s -- (lowercase s) matches a single whitespace character -- space, newline, return, tab, form [ \n\r\t\f]. \S (upper case S) matches any non-whitespace character.
+•	\t, \n, \r -- tab, newline, return
+•	\d -- decimal digit [0-9] (some older regex utilities do not support but \d, but they all support \w and \s)
+•	^ = start, $ = end -- match the start or end of the string
+•	\ -- inhibit the "specialness" of a character. So, for example, use \. to match a period or \\ to match a slash. If you are unsure if a character has special meaning, such as '@', you can put a slash in front of it, \@, to make sure it is treated just as a character.
+
+Basic example
+## Search for pattern 'iii' in string 'piiig'.
+  ## All of the pattern must match, but it may appear anywhere.
+  ## On success, match.group() is matched text.
+  match =re.search(r'iii','piiig')=>  found,match.group()=="iii"
+  match =re.search(r'igs','piiig')=>  not found, match ==None
+
+  ## . = any char but \n
+  match =re.search(r'..g','piiig')=>  found,match.group()=="iig"
+
+  ## \d = digit char, \w = word char
+  match =re.search(r'\d\d\d','p123g')=>  found,match.group()=="123"
+  match =re.search(r'\w\w\w','@@abcd!!')=>  found,match.group()=="abc"
+
+Repitition
+•	+ -- 1 or more occurrences of the pattern to its left, e.g. 'i+' = one or more i's
+•	* -- 0 or more occurrences of the pattern to its left
+•	? -- match 0 or 1 occurrences of the pattern to its left
+
+## i+ = one or more i's, as many as possible.
+  match=re.search(r'pi+','piiig')=>  found,match.group()=="piii"
+
+  ## Finds the first/leftmost solution, and within it drives the +
+  ## as far as possible (aka 'leftmost and largest').
+  ## In this example, note that it does not get to the second set of i's.
+  match=re.search(r'i+','piigiiii')=>  found,match.group()=="ii"
+
+  ## \s* = zero or more whitespace chars
+  ## Here look for 3 digits, possibly separated by whitespace.
+  match =re.search(r'\d\s*\d\s*\d','xx1 2   3xx')=>  found,match.group()=="1 2   3"
+  match =re.search(r'\d\s*\d\s*\d','xx12  3xx')=>  found,match.group()=="12  3"
+  match =re.search(r'\d\s*\d\s*\d','xx123xx')=>  found,match.group()=="123"
+
+  ## ^ = matches the start of string, so this fails:
+  match =re.search(r'^b\w+','foobar')=>  not found, match ==None
+  ## but without the ^ it succeeds:
+  match =re.search(r'b\w+','foobar')=>  found,match.group()=="bar"
+
+Email example
+str='purple alice-b@google.com monkey dishwasher'
+  match =re.search(r'\w+@\w+',str)
+  if match:
+    printmatch.group()  ## 'b@google'
+
+Square Brackets
+Square brackets can be used to indicate a set of chars, so [abc] matches 'a' or 'b' or 'c'. The codes \w, \s etc. work inside square brackets too with the one exception that dot (.) just means a literal dot. 
+match=re.search(r'[\w.-]+@[\w.-]+',str)
+  if match:
+    printmatch.group()  ## 'alice-b@google.com'
+
+Group Extraction
+The "group" feature of a regular expression allows you to pick out parts of the matching text. 
+To do this, add parenthesis ( ) around the username and host in the pattern, like this: r'([\w.-]+)@([\w.-]+)'. 
+str='purple alice-b@google.com monkey dishwasher'
+  match =re.search('([\w.-]+)@([\w.-]+)',str)
+  if match:
+    printmatch.group()   ## 'alice-b@google.com' (the whole match)
+    printmatch.group(1)  ## 'alice-b' (the username, group 1)
+    printmatch.group(2)  ## 'google.com' (the host, group 2)
+
+findall
+findall() is probably the single most powerful function in the re module. Above we used re.search() to find the first match for a pattern. findall() finds *all* the matches and returns them as a list of strings, with each string representing one match.
+## Suppose we have a text with many email addresses
+  str='purple alice@google.com, blah monkey bob@abc.com blah dishwasher'
+
+  ## Here re.findall() returns a list of all the found email strings
+  emails =re.findall(r'[\w\.-]+@[\w\.-]+',str)## ['alice@google.com', 'bob@abc.com']
+  for email in emails:
+    # do something with each found email string
+    print email
+
+findall With Files
+  # Open file
+  f =open('test.txt','r')
+  # Feed the file text into findall(); it returns a list of all the found strings
+  strings=re.findall(r'some pattern',f.read())
+
+findall and Groups
+str='purple alice@google.com, blah monkey bob@abc.com blah dishwasher'
+  tuples =re.findall(r'([\w\.-]+)@([\w\.-]+)',str)
+  print tuples  ## [('alice', 'google.com'), ('bob', 'abc.com')]
+  for tuple in tuples:
+    print tuple[0]  ## username
+    print tuple[1]  ## host
+Options
+The re functions take options to modify the behavior of the pattern match. The option flag is added as an extra argument to the search() or findall() etc., e.g. re.search(pat, str, re.IGNORECASE).
+•	IGNORECASE -- ignore upper/lowercase differences for matching, so 'a' matches both 'a' and 'A'.
+•	DOTALL -- allow dot (.) to match newline -- normally it matches anything but newline. This can trip you up -- you think .* matches everything, but by default it does not go past the end of a line. Note that \s (whitespace) includes newlines, so if you want to match a run of whitespace that may include a newline, you can just use \s*
+•	MULTILINE -- Within a string made of many lines, allow ^ and $ to match the start and end of each line. Normally ^/$ would just match the start and end of the whole string.
+
+Utilities
+File System -- os, os.path, shutil
+The *os* and *os.path* modules include many functions to interact with the file system. The *shutil* module can copy files.
+## Example pulls filenames from a dir, prints their relative and absolute paths
+defprintdir(dir):
+  filenames =os.listdir(dir)
+  for filename in filenames:
+    print filename  ## foo.txt
+    printos.path.join(dir, filename)## dir/foo.txt (relative to current dir)
+    printos.path.abspath(os.path.join(dir, filename))## /home/nick/dir/foo.txt
+
+Running External Processes -- commands
+The *commands* module is a simple way to run an external command and capture its output.
+cmd='ls -l '+dir
+  print"Command to run:",cmd   ## good to debug cmd before actually running it
+  (status, output)=commands.getstatusoutput(cmd)
+
+Exceptions
+An exception represents a run-time error that halts the normal execution at a particular line and transfers control to error handling code.
+try:
+    ## Either of these two lines could throw an IOError, say
+    ## if the file does not exist or the read() encounters a low level error.
+    f =open(filename,'rU')
+    text =f.read()
+    f.close()
+  exceptIOError:
+    ## Control jumps directly to here if any of the above lines throws IOError.
+    sys.stderr.write('problem reading:'+ filename)
+  ## In any case, the code then continues with the line after the try/except
+
+HTTP -- urllib and urlparse
+The module *urllib* provides url fetching -- making a url look like a file you can read form. The *urlparse* module can take apart and put together urls.
+•	urllib module docs
+•	ufile = urllib.urlopen(url) -- returns a file like object for that url
+•	text = ufile.read() -- can read from it, like a file (readlines() etc. also work)
+•	info = ufile.info() -- the meta info for that request. info.gettype() is the mime time, e.g. 'text/html'
+•	baseurl = ufile.geturl() -- gets the "base" url for the request, which may be different from the original because of redirects
+•	urllib.urlretrieve(url, filename) -- downloads the url data to the given file path
+•	urlparse.urljoin(baseurl, url) -- given a url that may or may not be full, and the baseurl of the page it comes from, return a full url. Use geturl() above to provide the base url.
+
+## Given a url, try to retrieve it. If it's text/html,
+## print its base url and its text.
+defwget(url):
+  Try:
+  ufile=urllib.urlopen(url)  ## get file-like object for url
+  info = ufile.info()   ## meta-info about the url content
+  ifinfo.gettype()=='text/html':
+    print'base url:'+ufile.geturl()
+    text =ufile.read()  ## read all its text
+    print text
+exceptIOError:
+    print'problem reading url:',url
+
+	
