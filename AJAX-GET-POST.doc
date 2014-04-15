@@ -1,0 +1,149 @@
+AJAX GET
+xmlhttp.open("GET","demo_get2.asp?fname=Henry&lname=Ford",true);
+xmlhttp.send();
+AJAX POST
+xmlhttp.open("POST","ajax_test.asp",true);
+xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+xmlhttp.send("fname=Henry&lname=Ford");
+Async=true
+When using async=true, specify a function to execute when the response is ready in the onreadystatechange event:
+Example
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 &&xmlhttp.status==200)
+    {
+    document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+    }
+  }
+xmlhttp.open("GET","ajax_info.txt",true);
+xmlhttp.send();
+
+AJAX Database Example
+The following example will demonstrate how a web page can fetch information from a database with AJAX:
+Example
+     
+
+Customer info will be listed here...
+
+Try it yourself »
+
+________________________________________
+Example Explained - The showCustomer() Function
+When a user selects a customer in the dropdown list above, a function called "showCustomer()" is executed. The function is triggered by the "onchange" event:
+function showCustomer(str)
+{
+varxmlhttp;
+if (str=="")
+  {
+  document.getElementById("txtHint").innerHTML="";
+  return;
+  }
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 &&xmlhttp.status==200)
+    {
+    document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+    }
+  }
+xmlhttp.open("GET","getcustomer.asp?q="+str,true);
+xmlhttp.send();
+}
+The showCustomer() function does the following:
+•	Check if a customer is selected
+•	Create an XMLHttpRequest object
+•	Create the function to be executed when the server response is ready
+•	Send the request off to a file on the server
+•	Notice that a parameter (q) is added to the URL (with the content of the dropdown list)
+________________________________________
+The AJAX Server Page
+The page on the server called by the JavaScript above is an ASP file called "getcustomer.asp".
+The server file could easily be rewritten in PHP, or some other server languages. Look at a corresponding example in PHP.
+The source code in "getcustomer.asp" runs a query against a database, and returns the result in an HTML table:
+<%
+response.expires=-1
+sql="SELECT * FROM CUSTOMERS WHERE CUSTOMERID="
+sql=sql& "'" &request.querystring("q") & "'"
+
+set conn=Server.CreateObject("ADODB.Connection")
+conn.Provider="Microsoft.Jet.OLEDB.4.0"
+conn.Open(Server.Mappath("/db/northwind.mdb"))
+set rs=Server.CreateObject("ADODB.recordset")
+rs.Opensql,conn
+
+response.write("<table>")
+do until rs.EOF
+  for each x in rs.Fields
+    response.write("<tr><td><b>" & x.name & "</b></td>")
+    response.write("<td>" &x.value& "</td></tr>")
+  next
+  rs.MoveNext
+loop
+response.write("</table>")
+%>
+
+Jquery AJAX
+GET
+$("button").click(function(){
+  $.get("demo_test.asp",function(data,status){
+    alert("Data: " + data + "\nStatus: " + status);
+  });
+});
+POST
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+</script>
+<script>
+$(document).ready(function(){
+  $("button").click(function(){
+    $.post("demo_test_post.asp",
+    {
+name:"Donald Duck",
+city:"Duckburg"
+    },
+function(data,status){
+alert("Data: " + data + "\nStatus: " + status);
+    });
+  });
+});
+</script>
+</head>
+<body>
+
+<button>Send an HTTP POST request to a page and get the result back</button>
+
+</body>
+</html>
+
+$.AJAX
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+</script>
+<script>
+$(document).ready(function(){
+  $("button").click(function(){
+    $.ajax({url:"demo_test.txt",success:function(result){
+      $("#div1").html(result);
+    }});
+  });
+});
+</script>
+</head>
+<body>
+
+<div id="div1"><h2>Let jQuery AJAX Change This Text</h2></div>
+<button>Get External Content</button>
+
+</body>
+</html>
