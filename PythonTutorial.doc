@@ -1,4 +1,4 @@
-Python Question
+Python Basics
 Basic:
 Source code does not declare the types of variables or parameters or methods. This makes the code short and flexible, and you lose the compile-time type checking in the source code. Python tracks the types of all values at runtime and flags code that does not make sense as it runs.
 Like C++ and Java, Python is case sensitive so "a" and "A" are different variables.
